@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<schema name='example' version='1.5'>
+  <fields>
+    <field name='_version_' type='long' indexed='true' stored='true' required='true'/>
+    <field name='question_id' type='long' indexed='true' stored='true' required='true' multiValued='false'/>
+    <field name='text' type='string' indexed='true' stored='true' required='true' multiValued='false'/>
+    <field name='category' type='string' indexed='true' stored='true' required='true' multiValued='false'/>
+  </fields>
+  <uniqueKey>question_id</uniqueKey>
+  <types>
+    <fieldType name='long' class='solr.TrieLongField' precisionStep='0' positionIncrementGap='0'/>
+    <fieldType name='string' class='solr.StrField' sortMissingLast='true'/>
+  </types>
+</schema>
