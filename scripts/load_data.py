@@ -24,9 +24,11 @@ def transform_json(path):
     with open(path) as f:
         for i, record in enumerate(json.load(f)):
             list.append({
-                'question_id': i + 2,
+                'answer': record['answer'],
                 'category': record['category'],
-                'text': record['question'],
+                'question': record['question'],
+                'question_id': i + 2,
+                'round': record['round'],
             })
     return json.dumps(list)
 

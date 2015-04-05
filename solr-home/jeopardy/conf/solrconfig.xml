@@ -66,83 +66,22 @@
     <httpCaching never304='true' />
   </requestDispatcher>
 
-  <requestHandler name='/update' class='solr.UpdateRequestHandler' />
+  <requestHandler name='/update' class='solr.UpdateRequestHandler'/>
 
   <requestHandler name='/get' class='solr.RealTimeGetHandler'>
     <lst name='defaults'>
       <str name='omitHeader'>true</str>
       <str name='wt'>json</str>
-      <str name='indent'>true</str>
     </lst>
   </requestHandler>
 
-  <requestHandler name='/query' class='solr.SearchHandler'>
-     <lst name='defaults'>
-       <str name='echoParams'>explicit</str>
-       <str name='wt'>json</str>
-       <str name='indent'>true</str>
-       <str name='df'>text</str>
-     </lst>
+  <requestHandler name="/select" class="solr.SearchHandler">
+    <lst name="defaults">
+      <str name='wt'>json</str>
+    </lst>
   </requestHandler>
 
-  <searchComponent class='solr.HighlightComponent' name='highlight'>
-    <highlighting>
-      <fragmenter name='gap' default='true' class='solr.highlight.GapFragmenter'>
-        <lst name='defaults'>
-          <int name='hl.fragsize'>100</int>
-        </lst>
-      </fragmenter>
-      <fragmenter name='regex' class='solr.highlight.RegexFragmenter'>
-        <lst name='defaults'>
-          <int name='hl.fragsize'>70</int>
-          <float name='hl.regex.slop'>0.5</float>
-          <str name='hl.regex.pattern'>[-\w ,/\n\'']{20,200}</str>
-        </lst>
-      </fragmenter>
-      <formatter name='html' default='true' class='solr.highlight.HtmlFormatter'>
-        <lst name='defaults'>
-          <str name='hl.simple.pre'><![CDATA[<em>]]></str>
-          <str name='hl.simple.post'><![CDATA[</em>]]></str>
-        </lst>
-      </formatter>
-      <encoder name='html' class='solr.highlight.HtmlEncoder' />
-      <fragListBuilder name='simple' class='solr.highlight.SimpleFragListBuilder' />
-      <fragListBuilder name='single' class='solr.highlight.SingleFragListBuilder' />
-      <fragListBuilder name='weighted' default='true' class='solr.highlight.WeightedFragListBuilder' />
-      <fragmentsBuilder name='default' default='true' class='solr.highlight.ScoreOrderFragmentsBuilder' />
-      <fragmentsBuilder name='colored' class='solr.highlight.ScoreOrderFragmentsBuilder'>
-        <lst name='defaults'>
-          <str name='hl.tag.pre'><![CDATA[<b style='background:yellow'>,<b style='background:lawgreen'>,
-               <b style='background:aquamarine'>,<b style='background:magenta'>,
-               <b style='background:palegreen'>,<b style='background:coral'>,
-               <b style='background:wheat'>,<b style='background:khaki'>,
-               <b style='background:lime'>,<b style='background:deepskyblue'>]]></str>
-          <str name='hl.tag.post'><![CDATA[</b>]]></str>
-        </lst>
-      </fragmentsBuilder>
-      <boundaryScanner name='default' default='true' class='solr.highlight.SimpleBoundaryScanner'>
-        <lst name='defaults'>
-          <str name='hl.bs.maxScan'>10</str>
-          <str name='hl.bs.chars'>.,!?</str>
-        </lst>
-      </boundaryScanner>
-      <boundaryScanner name='breakIterator' class='solr.highlight.BreakIteratorBoundaryScanner'>
-        <lst name='defaults'>
-          <str name='hl.bs.type'>WORD</str>
-          <str name='hl.bs.language'>en</str>
-          <str name='hl.bs.country'>US</str>
-        </lst>
-      </boundaryScanner>
-    </highlighting>
-  </searchComponent>
   <queryResponseWriter name='json' class='solr.JSONResponseWriter'>
     <str name='content-type'>text/plain; charset=UTF-8</str>
   </queryResponseWriter>
-  <queryResponseWriter name='velocity' class='solr.VelocityResponseWriter' startup='lazy' />
-  <queryResponseWriter name='xslt' class='solr.XSLTResponseWriter'>
-    <int name='xsltCacheLifetimeSeconds'>5</int>
-  </queryResponseWriter>
-  <admin>
-    <defaultQuery>*:*</defaultQuery>
-  </admin>
 </config>
