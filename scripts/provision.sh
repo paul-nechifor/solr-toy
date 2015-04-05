@@ -1,6 +1,4 @@
-#!/bin/bash
-
-set -e
+#!/bin/bash -eux
 
 packages=(
   java
@@ -17,20 +15,20 @@ main() {
 }
 
 install_packages() {
-  yum -y shell <<END
+  yum -y shell <<<"
     update
     install ${packages[@]}
     run
-END
+  "
 }
 
 setup_tomcat() {
   cat > /etc/tomcat6/tomcat-users.xml <<END
 <?xml version='1.0' encoding='utf-8'?>
 <tomcat-users>
-  <role rolename='manager' />
-  <role rolename='admin' />
-  <user username='admin' password='admin' roles='manager,admin' />
+  <role rolename='manager'/>
+  <role rolename='admin'/>
+  <user username='admin' password='admin' roles='manager,admin'/>
 </tomcat-users>
 END
 
@@ -42,18 +40,18 @@ get_requirements() {
   install_from_maven commons-logging 1.1.3
 
   cd
-  wget http://www.slf4j.org/dist/slf4j-1.7.10.tar.gz
+  wget -q http://www.slf4j.org/dist/slf4j-1.7.10.tar.gz
   tar -xzf slf4j-1.7.10.tar.gz
-  cd slf4j-1.7.10
-  cp slf4j-*.jar /usr/share/tomcat6/lib
-  rm -fr ~/slf47-*
+  rm slf4j-*/slf4j-*-sources.jar
+  cp slf4j-*/slf4j-*.jar /usr/share/tomcat6/lib
+  rm -fr slf4j-*
 }
 
 get_solr() {
-  cd 
+  cd
   local solr=solr-4.9.1
-  wget https://archive.apache.org/dist/lucene/solr/4.9.1/${solr}.tgz
-  tar -zxf ${solr}.tgz
+  wget -q https://archive.apache.org/dist/lucene/solr/4.9.1/${solr}.tgz
+  tar -xzf ${solr}.tgz
   cp ~/$solr/dist/${solr}.war /usr/share/tomcat6/webapps/solr.war
 
 
@@ -62,7 +60,7 @@ get_solr() {
   chown -R tomcat /opt/solr-dir
 
   service tomcat6 restart
-  sleep 10
+  sleep 20
 
   local replacement='<env-entry><env-entry-name>solr\/home<\/env-entry-name><env-entry-value>\/opt\/solr-dir<\/env-entry-value><env-entry-type>java.lang.String<\/env-entry-type><\/env-entry>'
   perl -i -0pe "s/\\n<\\/web-app>/$replacement<\\/web-app>/" /usr/share/tomcat6/webapps/solr/WEB-INF/web.xml
@@ -74,7 +72,7 @@ get_solr() {
 
 install_from_maven() {
   cd /usr/share/tomcat6/lib
-  wget http://central.maven.org/maven2/$1/$1/$2/$1-${2}.jar
+  wget -q "http://central.maven.org/maven2/$1/$1/$2/$1-${2}.jar"
 }
 
 main "$@"
