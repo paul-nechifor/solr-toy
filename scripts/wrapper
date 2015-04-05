@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# This script requires `pidfile` as environment variables.
+
+set -e
+cd "/opt/solr/example"
+exec java -jar start.jar >> "/var/log/solr/$(date +%s)" 2>&1 &
+# Hopefully this works?!
+ps ax | grep -- '-jar start.jar' | grep -v grep | awk '{ print $1 }' > "$pidfile"

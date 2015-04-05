@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# chkconfig: 345 99 01
+# description: solr
+
+. /etc/init.d/functions
+
+service="solr"
+logfile="/var/log/$service/$(date +%Y-%m-%d).log"
+lockfile="/var/lock/subsys/$service"
+pidfile="/var/run/${service}/pid"
+incantation="pidfile=$pidfile /vagrant/scripts/wrapper >> $logfile 2>&1 &"
+user="vagrant"
+
+start() {
+  echo "Starting $service: "
+  daemon --pidfile $pidfile --user $user "$incantation"
+  local retval=$?
+  [ $retval -eq 0 ] && touch $lockfile
+  return $retval
+}
+
+stop() {
+  echo "Shutting down $service: "
+  killproc -p $pidfile $service
+  local retval=$?
+  [ $retval -eq 0 ] && rm -f $lockfile
+  return $retval
+}
+
+case "$1" in
+  start) start ;;
+  stop) stop ;;
+  status) status -p $pidfile $service ;;
+  restart) stop; start ;;
+  *) echo "Usage: $service {start|stop|status|restart}"; exit 1 ;;
+esac
+exit $?
