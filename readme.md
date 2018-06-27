@@ -1,3 +1,7 @@
+# This repository has been moved to [gitlab.com/paul-nechifor/solr-toy](http://gitlab.com/paul-nechifor/solr-toy).
+
+Old readme:
+
 # Solr Toy
 
 Simple usage of Solr inside of Tomcat.
